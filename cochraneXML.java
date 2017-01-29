@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-//import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -17,7 +16,9 @@ public class cochraneXML {
 
 	Document doc;
 	
-    String finalString;  // used to concatenate lines into one line --- need to separate into PICO objects later
+    String finalString;  // concatenate all output into one string --- need to separate into PICO objects later
+    
+    String reviewP;
 	
 	private void parseXmlFile(){
 		//get the factory
@@ -74,7 +75,7 @@ public class cochraneXML {
     		for (int i = 0; i < nL.getLength(); i++)
     		    printNode (nL.item(i) );		
     	    if (finalString.length() != 0 ) {
-//    	        System.out.println( "    !!! " + searchWords[idx] );    // debug purpose to print out searching word
+//    	        System.out.println( "    !!! " + searchWords[idx] );   
     	        System.out.println( finalString );
     	    }
         	
@@ -86,27 +87,18 @@ public class cochraneXML {
         
 		if (rootNode.getNodeValue() != null) {
 			
-			 longString = rootNode.getNodeValue();
+			longString = rootNode.getNodeValue();
 			 
-		     // Create a Pattern object (checkRegex) that will define a regular expression
-			 // This regular expression will be used to find lines which are not only whitespace
-		    	
-		     Pattern checkRegex = Pattern.compile("[^(\\s*\n)][^(\t*\n)][^(\r*\n)][^(\b*\n)][^(\f*\n)]");
+		    //regular expression pattern to find lines that are not whitespace
+		    Pattern checkRegex = Pattern.compile("[^(\\s*\n)][^(\t*\n)][^(\r*\n)][^(\b*\n)][^(\f*\n)]");
+		    Matcher regexMatcher = checkRegex.matcher( longString );
 		     
-		     // Create a Matcher object (regexMatcher) that will search the String for
-		     // anything that matches the regular expression defined above
-
-		     Matcher regexMatcher = checkRegex.matcher( longString );
-		     
-		     // For lines which are not only whitespace
-		     // trim whitespace from the beginning and end of the string.
-		     // delete "\n" from the middle of the string
-		         
+		     // trim whitespace and \n from middle of string
 			if ( regexMatcher.find() ){
     	    	    tmpString = longString.trim();
 	        	    tmpString = tmpString.replace("\n", "");
-//	        	    System.out.println(tmpString);                  // debug purpose to print out every line which is not whitespace only
-//	        	    System.out.println("   ***  " + finalString);   // debug purpose to print out finalString to see how it is concatenated
+//	        	    System.out.println(tmpString);                  
+//	        	    System.out.println("   ***  " + finalString);   
 	        	    finalString = finalString + tmpString + " ";
 		    }
 		}
@@ -117,7 +109,6 @@ public class cochraneXML {
 	}
 	
 	public static void main(String[] args){
-		//create an instance
 		cochraneXML cochraneXML_ins = new cochraneXML();
 		
 		//parse the xml file and get the dom object
